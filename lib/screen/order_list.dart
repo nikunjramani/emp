@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:emp/model/order.dart';
+import 'package:emp/screen/order_details.dart';
 import 'package:emp/utils/constant.dart';
 import 'package:emp/utils/prefs.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,13 @@ class _OrderState extends State<OrderList> {
             itemCount: order != null ? order.data.length : 0,
             itemBuilder: (context, index) {
               return InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => OrderDetails(order.data[index])),
+                  );
+                },
                 child: Card(
                   child: ListTile(
                     title: Text(order.data[index].serviceTitle),
