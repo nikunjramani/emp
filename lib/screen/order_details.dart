@@ -25,40 +25,45 @@ class _OrderDetailsState extends State<OrderDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              buildUserInfoDisplay(
-                  title: "Service Title", value: data.serviceTitle),
-              buildUserInfoDisplay(
-                  title: "Service Schedule", value: data.serviceSchedule),
-              buildUserInfoDisplay(
-                  title: "Manage Of WorkOrder", value: data.manageOfWorkOrder),
-              buildUserInfoDisplay(
-                  title: "Assigned Provider", value: data.assignedProvider),
-              buildUserInfoDisplay(
-                  title: "Service Location", value: data.serviceLocation),
-              buildUserInfoDisplay(title: "Order Id", value: data.orderId),
-              buildUserInfoDisplay(
-                  title: "Traning Link", value: data.traningLink),
-              buildUserInfoDisplay(
-                  title: "Help Desk Contact", value: data.helpDeskContact),
-              buildUserInfoDisplay(
-                  title: "Manager On Duty", value: data.managerOnDuty),
-              buildUserInfoDisplay(
-                  title: "Orientation Keyword", value: data.orientationKeyword),
-              ListView.builder(
-                  shrinkWrap: true,
-                  itemCount:
-                      data.customField != null ? data.customField.length : 0,
-                  itemBuilder: (context, index) {
-                    return buildUserInfoDisplay(
-                        title: data.customField[index].title,
-                        value: data.customField[index].value);
-                  }),
-              buildDropDownSelector(value: data.status)
-            ],
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildUserInfoDisplay(
+                    title: "Service Title", value: data.serviceTitle),
+                buildUserInfoDisplay(
+                    title: "Service Schedule", value: data.serviceSchedule),
+                buildUserInfoDisplay(
+                    title: "Manage Of WorkOrder",
+                    value: data.manageOfWorkOrder),
+                buildUserInfoDisplay(
+                    title: "Assigned Provider", value: data.assignedProvider),
+                buildUserInfoDisplay(
+                    title: "Service Location", value: data.serviceLocation),
+                buildUserInfoDisplay(title: "Order Id", value: data.orderId),
+                buildUserInfoDisplay(
+                    title: "Traning Link", value: data.traningLink),
+                buildUserInfoDisplay(
+                    title: "Help Desk Contact", value: data.helpDeskContact),
+                buildUserInfoDisplay(
+                    title: "Manager On Duty", value: data.managerOnDuty),
+                buildUserInfoDisplay(
+                    title: "Orientation Keyword",
+                    value: data.orientationKeyword),
+                ListView.builder(
+                    shrinkWrap: true,
+                    itemCount:
+                        data.customField != null ? data.customField.length : 0,
+                    itemBuilder: (context, index) {
+                      return buildUserInfoDisplay(
+                          title: data.customField[index].title,
+                          value: data.customField[index].value);
+                    }),
+                buildDropDownSelector(value: data.status)
+              ],
+            ),
           ),
         ),
       ),
