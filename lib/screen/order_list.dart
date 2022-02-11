@@ -26,6 +26,10 @@ class _OrderState extends State<OrderList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.orange[400],
+        title: Text("Order List"),
+      ),
       body: Container(
         child: ListView.builder(
             itemCount: order != null ? order.data.length : 0,

@@ -29,6 +29,10 @@ class _OrderDetailsState extends State<OrderDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.orange[400],
+        title: Text("Order Details"),
+      ),
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.all(10),
@@ -67,11 +71,40 @@ class _OrderDetailsState extends State<OrderDetails> {
                           value: data.customField[index].value);
                     }),
                 buildDropDownSelector(value: getStatus(data.status)),
-                TextButton(
-                    onPressed: () {
-                      uploadFile();
-                    },
-                    child: Text("Upload File"))
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Upload File",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 1,
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 10),
+                      alignment: Alignment.centerLeft,
+                      width: MediaQuery.of(context).size.width,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(100, 211, 211, 211),
+                        border: Border.all(
+                          color: const Color.fromARGB(100, 211, 211, 211),
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: TextButton(
+                          onPressed: () {
+                            uploadFile();
+                          },
+                          child: Container(child: Text("Upload File"))),
+                    ),
+                  ],
+                )
               ],
             ),
           ),
@@ -130,29 +163,41 @@ class _OrderDetailsState extends State<OrderDetails> {
             "Status",
             style: TextStyle(
               fontSize: 15,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey,
+              fontWeight: FontWeight.bold,
+              color: Colors.black54,
             ),
           ),
           const SizedBox(
             height: 1,
           ),
-          DropdownButton(
-            value: dropdownvalue,
-            icon: const Icon(Icons.keyboard_arrow_down),
-            items: items.map((String items) {
-              return DropdownMenuItem(
-                value: items,
-                child: Text(items),
-              );
-            }).toList(),
-            onChanged: (String newValue) {
-              setState(() {
-                dropdownvalue = newValue;
-                data.status = getHttpStatus(newValue);
-              });
-              changeOrderStatus();
-            },
+          Container(
+            padding: EdgeInsets.only(left: 10),
+            alignment: Alignment.centerLeft,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(100, 211, 211, 211),
+              border: Border.all(
+                color: const Color.fromARGB(100, 211, 211, 211),
+              ),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: DropdownButton(
+              value: dropdownvalue,
+              icon: const Icon(Icons.keyboard_arrow_down),
+              items: items.map((String items) {
+                return DropdownMenuItem(
+                  value: items,
+                  child: Text(items),
+                );
+              }).toList(),
+              onChanged: (String newValue) {
+                setState(() {
+                  dropdownvalue = newValue;
+                  data.status = getHttpStatus(newValue);
+                });
+                changeOrderStatus();
+              },
+            ),
           ),
         ],
       ));
@@ -190,22 +235,25 @@ class _OrderDetailsState extends State<OrderDetails> {
             title,
             style: const TextStyle(
               fontSize: 15,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey,
+              fontWeight: FontWeight.bold,
+              color: Colors.black54,
             ),
           ),
           const SizedBox(
             height: 1,
           ),
           Container(
+              padding: EdgeInsets.only(left: 10),
+              alignment: Alignment.centerLeft,
               width: MediaQuery.of(context).size.width,
               height: 40,
-              decoration: const BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(
-                color: Colors.grey,
-                width: 1,
-              ))),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(100, 211, 211, 211),
+                border: Border.all(
+                  color: const Color.fromARGB(100, 211, 211, 211),
+                ),
+                borderRadius: BorderRadius.circular(5),
+              ),
               child: Text(
                 value,
                 style: const TextStyle(fontSize: 16, height: 1.4),

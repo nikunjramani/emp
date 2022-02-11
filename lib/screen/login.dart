@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:emp/screen/fade_animation.dart';
+import 'package:emp/screen/order_list.dart';
 import 'package:emp/utils/constant.dart';
 import 'package:emp/utils/prefs.dart';
 import 'package:flutter/material.dart';
@@ -143,6 +144,11 @@ class Login extends StatelessWidget {
                                   prefTokenKey, parsed["token"]);
 
                               PrefsService.saveBool(prefIsUserLogin, true);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const OrderList()),
+                              );
                             }
                           },
                           child: FadeAnimation(
