@@ -87,7 +87,7 @@ class _ProfileState extends State<Profile> {
       ));
 
   Future<void> getUserProfile() async {
-    var orderUrl = Uri.parse(url + 'profile');
+    var orderUrl = Uri.parse(url + 'getProfile');
     var response = await http.get(orderUrl, headers: {
       'Authorization': "Bearer " + await PrefsService.getStringl(prefTokenKey),
     });

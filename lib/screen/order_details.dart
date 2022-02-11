@@ -1,5 +1,12 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:emp/model/order.dart';
+import 'package:emp/utils/constant.dart';
+import 'package:emp/utils/prefs.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 class OrderDetails extends StatefulWidget {
   Data data;
@@ -13,13 +20,11 @@ class _OrderDetailsState extends State<OrderDetails> {
   Data data;
   _OrderDetailsState(this.data);
   var items = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
+    'On The Way',
+    'Check In',
+    'Complete',
   ];
-  String dropdownvalue = 'Item 1';
+  String dropdownvalue = 'On The Way';
 
   @override
   Widget build(BuildContext context) {
@@ -61,13 +66,59 @@ class _OrderDetailsState extends State<OrderDetails> {
                           title: data.customField[index].title,
                           value: data.customField[index].value);
                     }),
-                buildDropDownSelector(value: data.status)
+                buildDropDownSelector(value: getStatus(data.status)),
+                TextButton(
+                    onPressed: () {
+                      uploadFile();
+                    },
+                    child: Text("Upload File"))
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  String getStatus(String status) {
+    if (status == "on_the_way") {
+      return "On The Way";
+    } else if (status == "check_in") {
+      return "Check In";
+    } else {
+      return "Complete";
+    }
+  }
+
+  String getHttpStatus(String status) {
+    if (status == "On The Way") {
+      return "on_the_way";
+    } else if (status == "Check In") {
+      return "check_in";
+    } else {
+      return "complate";
+    }
+  }
+
+  Future<void> uploadFile() async {
+    final ImagePicker _picker = ImagePicker();
+
+    final XFile image = await _picker.pickImage(source: ImageSource.gallery);
+    var formData = FormData.fromMap({
+      'order_id': data.id.toString(),
+      'type': 'image',
+      'file': await MultipartFile.fromFile(image.path, filename: image.name),
+    });
+    Response<Map> response = await Dio().post(url + 'orderDocument',
+        data: formData,
+        options: Options(headers: {
+          'Authorization':
+              "Bearer " + await PrefsService.getStringl(prefTokenKey),
+        }));
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.data}');
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(response.data["message"])));
   }
 
   Widget buildDropDownSelector({String value}) => Container(
@@ -98,11 +149,37 @@ class _OrderDetailsState extends State<OrderDetails> {
             onChanged: (String newValue) {
               setState(() {
                 dropdownvalue = newValue;
+                data.status = getHttpStatus(newValue);
               });
+              changeOrderStatus();
             },
           ),
         ],
       ));
+
+  Future<void> changeOrderStatus() async {
+    String status = getHttpStatus(dropdownvalue);
+
+    Map body;
+    if (status == "complate") {
+      body = {'order_id': data.id.toString(), 'status': status, 'note': ''};
+    } else {
+      body = {'order_id': data.id.toString(), 'status': status};
+    }
+    var orderUrl = Uri.parse(url + 'orderStatusChange');
+    var response = await http.post(orderUrl,
+        headers: {
+          'Authorization':
+              "Bearer " + await PrefsService.getStringl(prefTokenKey),
+        },
+        body: body);
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    Map parsed = json.decode(response.body);
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(parsed["message"])));
+  }
 
   Widget buildUserInfoDisplay({String title, String value}) => Padding(
       padding: const EdgeInsets.only(bottom: 10),
