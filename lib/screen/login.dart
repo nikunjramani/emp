@@ -142,7 +142,9 @@ class Login extends StatelessWidget {
                             if (response.statusCode == 200) {
                               PrefsService.saveString(
                                   prefTokenKey, parsed["token"]);
-
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Login Successfully")));
                               PrefsService.saveBool(prefIsUserLogin, true);
                               Navigator.push(
                                 context,
