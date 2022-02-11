@@ -28,22 +28,25 @@ class _OrderState extends State<OrderList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Used for removing back buttoon.
         backgroundColor: Colors.orange[400],
         title: Text("Order List"),
         actions: <Widget>[
-          FlatButton(
-            textColor: Colors.white,
-            onPressed: () {
+          InkWell(
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Profile()),
               );
             },
-            child: Icon(
-              Icons.account_circle,
-              size: 30,
+            child: Container(
+              padding: const EdgeInsets.only(right: 10),
+              child: const Icon(
+                Icons.account_circle,
+                color: Colors.white,
+                size: 30,
+              ),
             ),
-            shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
           ),
         ],
       ),
