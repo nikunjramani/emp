@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:emp/model/order.dart';
 import 'package:emp/screen/order_details.dart';
+import 'package:emp/screen/profile.dart';
 import 'package:emp/utils/constant.dart';
 import 'package:emp/utils/prefs.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,22 @@ class _OrderState extends State<OrderList> {
       appBar: AppBar(
         backgroundColor: Colors.orange[400],
         title: Text("Order List"),
+        actions: <Widget>[
+          FlatButton(
+            textColor: Colors.white,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Profile()),
+              );
+            },
+            child: Icon(
+              Icons.account_circle,
+              size: 30,
+            ),
+            shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+          ),
+        ],
       ),
       body: Container(
         child: ListView.builder(

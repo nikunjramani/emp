@@ -27,29 +27,32 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Container(
       child: SingleChildScrollView(
-        child: Column(
-          children: [
-            buildUserInfoDisplay(employee.employeeName, "Name"),
-            buildUserInfoDisplay(employee.email, "Email"),
-            buildUserInfoDisplay(employee.dateOfBirth, "DOB"),
-            buildUserInfoDisplay(employee.startDate, "Start Date"),
-            buildUserInfoDisplay(employee.dateOfHire, "DOH"),
-            buildUserInfoDisplay(
-                employee.socialInsuranceNumber, "Social Insurance Number"),
-            buildUserInfoDisplay(
-                employee.employeeContactForm, "Employee Contact Form"),
-            buildUserInfoDisplay(
-                employee.employeeCourseName, "Employee Course Name"),
-            buildUserInfoDisplay(
-                employee.employeeCourseDate, "Employee Course Date"),
-            buildUserInfoDisplay(employee.employeeCertificateOfCourse,
-                "Employee Certificate Of   Course"),
-            buildUserInfoDisplay(
-                employee.diciplinaryActionNote, "Disciplinary Action Note"),
-            buildUserInfoDisplay(employee.diciplinaryForm, "Disciplinary Form"),
-            buildUserInfoDisplay(employee.assetOnHand, "Asset On Hand"),
-          ],
-        ),
+        child: employee != null
+            ? Column(
+                children: [
+                  buildUserInfoDisplay(employee.employeeName, "Name"),
+                  buildUserInfoDisplay(employee.email, "Email"),
+                  buildUserInfoDisplay(employee.dateOfBirth, "DOB"),
+                  buildUserInfoDisplay(employee.startDate, "Start Date"),
+                  buildUserInfoDisplay(employee.dateOfHire, "DOH"),
+                  buildUserInfoDisplay(employee.socialInsuranceNumber,
+                      "Social Insurance Number"),
+                  buildUserInfoDisplay(
+                      employee.employeeContactForm, "Employee Contact Form"),
+                  buildUserInfoDisplay(
+                      employee.employeeCourseName, "Employee Course Name"),
+                  buildUserInfoDisplay(
+                      employee.employeeCourseDate, "Employee Course Date"),
+                  buildUserInfoDisplay(employee.employeeCertificateOfCourse,
+                      "Employee Certificate Of   Course"),
+                  buildUserInfoDisplay(employee.diciplinaryActionNote,
+                      "Disciplinary Action Note"),
+                  buildUserInfoDisplay(
+                      employee.diciplinaryForm, "Disciplinary Form"),
+                  buildUserInfoDisplay(employee.assetOnHand, "Asset On Hand"),
+                ],
+              )
+            : Container(),
       ),
     );
   }
