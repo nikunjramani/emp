@@ -129,6 +129,8 @@ class Login extends StatelessWidget {
                         ),
                         InkWell(
                           onTap: () async {
+                            showLoaderDialog(context);
+
                             var loginurl = Uri.parse(url + 'login');
                             var response = await http.post(loginurl, body: {
                               'email': email.text,
@@ -142,6 +144,8 @@ class Login extends StatelessWidget {
                             if (response.statusCode == 200) {
                               PrefsService.saveString(
                                   prefTokenKey, parsed["token"]);
+                              Navigator.pop(context);
+
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text("Login Successfully")));
@@ -151,6 +155,13 @@ class Login extends StatelessWidget {
                                 MaterialPageRoute(
                                     builder: (context) => const OrderList()),
                               );
+                            } else {
+                              Navigator.pop(context);
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          "Login Error. Please Try Again")));
                             }
                           },
                           child: FadeAnimation(
@@ -181,6 +192,26 @@ class Login extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Row(
+        children: [
+          const CircularProgressIndicator(),
+          Container(
+              margin: const EdgeInsets.only(left: 7),
+              child: const Text("Loading...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
