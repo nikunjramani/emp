@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:emp/screen/login.dart';
+import 'package:emp/screen/order_list.dart';
 import 'package:emp/utils/constant.dart';
 import 'package:emp/utils/prefs.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
         future: PrefsService.getBool(prefIsUserLogin),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.data == true) {
-            return Login();
+            return OrderList();
           } else {
             return Login();
           }
