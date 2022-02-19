@@ -6,6 +6,8 @@ import 'package:emp/utils/prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../main.dart';
+
 class Profile extends StatefulWidget {
   const Profile({Key key}) : super(key: key);
 
@@ -59,6 +61,29 @@ class _ProfileState extends State<Profile> {
                           employee.diciplinaryForm ?? '', "Disciplinary Form"),
                       buildUserInfoDisplay(
                           employee.assetOnHand ?? '', "Asset On Hand"),
+                      TextButton(
+                          onPressed: () async {
+                            await PrefsService.saveBool(prefIsUserLogin, false);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => MyApp()),
+                            );
+                          },
+                          child: Container(
+                            height: 50,
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text(
+                              "Logout",
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white),
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 217, 113, 11),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          )),
                     ],
                   )
                 : Container(),

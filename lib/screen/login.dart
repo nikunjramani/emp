@@ -4,6 +4,7 @@ import 'package:emp/screen/fade_animation.dart';
 import 'package:emp/screen/order_list.dart';
 import 'package:emp/utils/constant.dart';
 import 'package:emp/utils/prefs.dart';
+import 'package:emp/utils/progress_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -192,26 +193,6 @@ class Login extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  showLoaderDialog(BuildContext context) {
-    AlertDialog alert = AlertDialog(
-      content: Row(
-        children: [
-          const CircularProgressIndicator(),
-          Container(
-              margin: const EdgeInsets.only(left: 7),
-              child: const Text("Loading...")),
-        ],
-      ),
-    );
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
     );
   }
 }
