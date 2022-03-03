@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:emp/model/employee.dart';
 import 'package:emp/utils/constant.dart';
 import 'package:emp/utils/prefs.dart';
+import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,7 +20,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   Employee employee;
-
+  String path;
   @override
   void initState() {
     getUserProfile();
@@ -29,11 +32,11 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange[400],
-        title: Text("Profile"),
+        title: const Text("Profile"),
       ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: SingleChildScrollView(
             child: employee != null
                 ? Column(
@@ -63,18 +66,81 @@ class _ProfileState extends State<Profile> {
                           employee.assetOnHand ?? '', "Asset On Hand"),
                       TextButton(
                           onPressed: () async {
+                            download2(Dio(), url + employee.employeeContactForm,
+                                path+"/employeeContactForm.pdf");
+                          },
+                          child: Container(
+                            height: 50,
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.only(left: 10),
+                            child: const Text(
+                              "Download Employee Contact Form",
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white),
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 217, 113, 11),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          )),
+                      TextButton(
+                          onPressed: () async {
+                            download2(
+                                Dio(),
+                                url + employee.employeeCertificateOfCourse,
+                                path+"/employeeCertificateOfCourse.pdf");
+                          },
+                          child: Container(
+                            height: 50,
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.only(left: 10),
+                            child: const Text(
+                              "Download Employee Certificate of Course",
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white),
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 217, 113, 11),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          )),
+                      TextButton(
+                          onPressed: () async {
+                            download2(
+                                Dio(), url + employee.diciplinaryForm, path+"/diciplinaryForm.pdf");
+                          },
+                          child: Container(
+                            height: 50,
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.only(left: 10),
+                            child: const Text(
+                              "Disciplinary Form",
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white),
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 217, 113, 11),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          )),
+                      TextButton(
+                          onPressed: () async {
                             await PrefsService.saveBool(prefIsUserLogin, false);
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => MyApp()),
+                              MaterialPageRoute(
+                                  builder: (context) => const MyApp()),
                             );
                           },
                           child: Container(
                             height: 50,
                             alignment: Alignment.center,
                             width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.only(left: 10),
-                            child: Text(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: const Text(
                               "Logout",
                               style:
                                   TextStyle(fontSize: 20, color: Colors.white),
@@ -110,7 +176,7 @@ class _ProfileState extends State<Profile> {
             height: 1,
           ),
           Container(
-              padding: EdgeInsets.only(left: 10),
+              padding: const EdgeInsets.only(left: 10),
               alignment: Alignment.centerLeft,
               width: MediaQuery.of(context).size.width,
               height: 40,
@@ -139,5 +205,29 @@ class _ProfileState extends State<Profile> {
     setState(() {
       employee = Employee.fromJson(data['data']);
     });
+    path = await ExtStorage.getExternalStoragePublicDirectory(
+        ExtStorage.DIRECTORY_DOWNLOADS);
+  }
+
+  Future download2(Dio dio, String url, String savePath) async {
+    try {
+      Response response = await dio.get(
+        url,
+        options: Options(
+            responseType: ResponseType.bytes,
+            followRedirects: false,
+            validateStatus: (status) {
+              return status < 500;
+            }),
+      );
+      print(response.headers);
+      File file = File(savePath);
+      var raf = file.openSync(mode: FileMode.write);
+      // response.data is List<int> type
+      raf.writeFromSync(response.data);
+      await raf.close();
+    } catch (e) {
+      print(e);
+    }
   }
 }

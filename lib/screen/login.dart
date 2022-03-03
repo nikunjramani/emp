@@ -7,13 +7,19 @@ import 'package:emp/utils/prefs.dart';
 import 'package:emp/utils/progress_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 
 class Login extends StatelessWidget {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
+  Future<void> getPermission() async {
+    var status = await Permission.camera.status;
+  }
+
   @override
   Widget build(BuildContext context) {
+    getPermission();
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -141,28 +147,36 @@ class Login extends StatelessWidget {
                             });
                             print('Response status: ${response.statusCode}');
                             print('Response body: ${response.body}');
-                            Map parsed = json.decode(response.body);
-                            if (response.statusCode == 200) {
-                              PrefsService.saveString(
-                                  prefTokenKey, parsed["token"]);
-                              Navigator.pop(context);
+                            try {
+                              Map parsed = json.decode(response.body);
+                              if (response.statusCode == 200) {
+                                PrefsService.saveString(
+                                    prefTokenKey, parsed["token"]);
+                                Navigator.pop(context);
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("Login Successfully")));
-                              PrefsService.saveBool(prefIsUserLogin, true);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const OrderList()),
-                              );
-                            } else {
-                              Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text("Login Successfully")));
+                                PrefsService.saveBool(prefIsUserLogin, true);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const OrderList()),
+                                );
+                              } else {
+                                Navigator.pop(context);
 
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            "Login Error. Please Try Again")));
+                              }
+                            } catch (e) {
+                              Navigator.pop(context);
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text(
-                                          "Login Error. Please Try Again")));
+                                          "Something went wrong. Please Try Again")));
                             }
                           },
                           child: FadeAnimation(
