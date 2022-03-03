@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:emp/model/order.dart';
 import 'package:emp/utils/constant.dart';
 import 'package:emp/utils/prefs.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -135,23 +137,30 @@ class _OrderDetailsState extends State<OrderDetails> {
 
   Future<void> uploadFile() async {
     final ImagePicker _picker = ImagePicker();
+    FilePickerResult result = await FilePicker.platform.pickFiles();
 
+    if (result != null) {
+      File file = File(result.files.single.path);
+      var formData = FormData.fromMap({
+        'order_id': data.id.toString(),
+        'type': 'image',
+        'file': await MultipartFile.fromFile(file.path,
+            filename: file.path.split('/').last),
+      });
+      Response<Map> response = await Dio().post(url + 'orderDocument',
+          data: formData,
+          options: Options(headers: {
+            'Authorization':
+                "Bearer " + await PrefsService.getStringl(prefTokenKey),
+          }));
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.data}');
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(response.data["message"])));
+    } else {
+      // User canceled the picker
+    }
     final XFile image = await _picker.pickImage(source: ImageSource.gallery);
-    var formData = FormData.fromMap({
-      'order_id': data.id.toString(),
-      'type': 'image',
-      'file': await MultipartFile.fromFile(image.path, filename: image.name),
-    });
-    Response<Map> response = await Dio().post(url + 'orderDocument',
-        data: formData,
-        options: Options(headers: {
-          'Authorization':
-              "Bearer " + await PrefsService.getStringl(prefTokenKey),
-        }));
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.data}');
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(response.data["message"])));
   }
 
   Widget buildDropDownSelector({String value}) => Container(

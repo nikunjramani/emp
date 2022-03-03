@@ -7,7 +7,7 @@ import 'package:emp/utils/prefs.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  HttpOverrides.global = new MyHttpOverrides();
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
 
